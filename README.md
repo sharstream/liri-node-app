@@ -7,6 +7,7 @@ LIRI is like iPhone's SIRI. However, while SIRI is a Speech Interpretation and R
 3. Then run command like:
     - node liri.js latest_twitters
     - node liri.js ranking_sounds, etc
+4. If someone wanted to clone your app from github and run it themselves, they would need to supply their own .env file for it to work.
   
 ### installation required:
   - package.json
@@ -24,3 +25,5 @@ LIRI is like iPhone's SIRI. However, while SIRI is a Speech Interpretation and R
     "spotify": "^0.3.0",
     "twitter": "^1.7.1"
   }`
+  
+  
