@@ -15,16 +15,19 @@ var request = require("request");
 if (process.argv[2] === 'my-tweets') {
     //show you at leasr the last 20 tweets
     var params = {
-        query: 'SEARCH_QUERY_HERE', //search query
+        q: '#nodejs, #Nodejs', //search query
         count: 20, //number of tweets to return
         screen_name: 'nodejs',
         result_type: 'recent', //shows recent tweets
         lang: 'en' //language English
     };
+    console.log(params);
     client.get('search/tweets', params, function (error, tweets, response) {
         if (!error) {
-            for(item in tweets){
-                console.log(tweets[item]);
+            for (var i = 0; i < tweets.statuses.length; i++) {
+                var id = { id: tweets.statuses[i].id_str };
+                var text = { text: tweets.statuses[i].text};
+                console.log('recent tweets: ' + id['id'] + 'tweet: ' + text['text']);
             }
         } else {
             console.log(error);
