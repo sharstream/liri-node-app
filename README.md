@@ -18,6 +18,8 @@ LIRI is like iPhone's SIRI. However, while SIRI is a Speech Interpretation and R
  ### Package json
  
   `"dependencies": {
+    "dotenv": "^5.0.1",
+    "node-spotify-api": "^1.0.7",
     "request": "^2.85.0",
     "spotify": "^0.3.0",
     "twitter": "^1.7.1"
