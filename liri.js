@@ -6,6 +6,8 @@ var Spotify = require("node-spotify-api");
 var spotify = new Spotify(keys.spotify);
 var Twitter = require("twitter");
 var client = new Twitter(keys.twitter);
+var Omdb = require('omdb');
+var omdb = new Omdb(keys.omdb);
 
 var fs = require('fs');
 // Include the request npm package (Don't forget to run "npm install request" in this folder first!)
@@ -74,7 +76,54 @@ else if (process.argv[2] === 'spotify-this-song') {
     }
 }
 else if (process.argv[2] === 'movie-this') {
-    
+    // API URL: http://www.omdbapi.com/?i=tt3896198&apikey=omdb
+    if (process.argv[3] !== '') {
+        omdb.search('saw', function (err, movies) {
+            if (err) {
+                return console.error(err);
+            }
+
+            if (movies.length < 1) {
+                return console.log('No movies were found!');
+            }
+
+            movies.forEach(function (movie) {
+                // * Title of the movie.
+                // * Year the movie came out.
+                // * IMDB Rating of the movie.
+                // * Rotten Tomatoes Rating of the movie.
+                // * Country where the movie was produced.
+                // * Language of the movie.
+                // * Plot of the movie.
+                // * Actors in the movie.
+
+                console.log('%s (%d) %d/10', movie.title, movie.year, movie.imdb.rating);
+                console.log('Rooten Tomatoes %d/10', movie.tomatoRating);
+                console.log('country(%s) and language(%d)', movie.Country, movie.language);
+                console.log(movie.plot);
+                console.log('actors: ', movie.Actors);
+            });
+        });
+    } else {
+        omdb.get({ title: 'Mr. Nobody.', year: 2009 }, true, function (err, movie) {
+            if (err) {
+                return console.error(err);
+            }
+
+            if (!movie) {
+                return console.log('Movie not found!');
+            }
+
+            console.log('%s (%d) %d/10', movie.title, movie.year, movie.imdb.rating);
+            console.log('Rooten Tomatoes %d/10', movie.tomatoRating);
+            console.log('country(%s) and language(%d)', movie.Country, movie.language);
+            console.log(movie.plot);
+            console.log('actors: ', movie.Actors);
+
+            // Mr. Nobody. (2009) 7.9/10
+            // Mr. Nobody tells the life story of Nemo...
+        });
+    }
 }
 else if (process.argv[2] === 'do-what-it-says') {
     
