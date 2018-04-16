@@ -35,29 +35,43 @@ if (process.argv[2] === 'my-tweets') {
     });
 }
 else if (process.argv[2] === 'spotify-this-song') {
-    spotify.search({ type: 'track', query: 'All the Small Things' }, function (err, data) {
-        if (err) {
-            return console.log('Error occurred: ' + err);
-        }
-
-        console.log(data);
-
-        var fs = require('fs');
-
-        var allLines = fs.readFileSync('random.txt').toString().split('\n');
-
-        for (let j = 0; j < process.argv.length; j++) {
-
-            console.log(process.argv[j]);
-            if (j !== 0 && j !== 1) {
-                allLines.foreach(function (line) {
-                    var newLine = line + process.argv[j];
-                    console.log(newLine);
-                    fs.appendFileSync("random.txt", newLine.toString() + "\n");
-                });
-            }
-        };
-    });
+    var allLines = fs.readFileSync('random.txt').toString().split('\n');
+    console.log('allLines: ' + allLines);
+    var song = process.argv[3];
+    if (song !== '') {
+        spotify
+            .search({ type: 'track', query: 'All the Small Things', limit: 1 })
+            .then(function (data, response) {
+                // console.log(JSON.stringify(data, null, 2));
+                console.log('length: ' + data.tracks.items.length);
+                for (let i = 0; i < data.tracks.items.length; i++) {
+                    const element = data.tracks.items[i];
+                    console.log('Artist(s): ' + element.album.artists[0].name);
+                    console.log("The song's name is: " + element.name);
+                    console.log('A preview link of the song from Spotify is: ' + element.preview_url);
+                    console.log('The album name is: ' + element.album.name);
+                    fs.appendFileSync("random.txt", 'spotify-this-song' + ', ' + element.name + "\n");
+                }
+            })
+            .catch(function (err) {
+                console.log('Error occurred: ' + err);
+            }); 
+    }
+    else {
+        spotify
+            .search({ type: 'track', query: 'The Sign', limit: 1 })
+            .then(function(data, response){
+                const element = data.tracks.items[0];
+                console.log('Artist(s): ' + element.album.artists[0].name);
+                console.log("The song's name is: " + element.name);
+                console.log('A preview link of the song from Spotify is: ' + element.preview_url);
+                console.log('The album name is: ' + element.album.name);
+                fs.appendFileSync("random.txt", 'spotify-this-song' + ', ' + element.name + "\n");
+            })
+            .catch(function(err){
+                console.log('Error occurred: ' + err);
+            })
+    }
 }
 else if (process.argv[2] === 'movie-this') {
     
