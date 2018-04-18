@@ -36,33 +36,54 @@ if (process.argv[2] === 'my-tweets') {
         }
     });
 }
-else if (process.argv[2] === 'spotify-this-song') {
+else if (process.argv[2] === 'spotify-this-song' || process.argv[2] === 'do-what-it-says') {
     var allLines = fs.readFileSync('random.txt').toString().split('\n');
-    console.log('allLines: ' + allLines);
-    var song = '';
-    if (process.argv[3] !== '') {
-        song = process.argv[3];
-    }
-    else {
-        song = 'The Sign'
-    }
-    spotify
-        .search({ type: 'track', query: 'All the Small Things', limit: 1 })
-        .then(function (data, response) {
-            // console.log(JSON.stringify(data, null, 2));
-            console.log('length: ' + data.tracks.items.length);
-            for (let i = 0; i < data.tracks.items.length; i++) {
-                const element = data.tracks.items[i];
-                console.log('Artist(s): ' + element.album.artists[0].name);
-                console.log("The song's name is: " + element.name);
-                console.log('A preview link of the song from Spotify is: ' + element.preview_url);
-                console.log('The album name is: ' + element.album.name);
-                fs.appendFileSync("random.txt", 'spotify-this-song' + ', ' + element.name + "\n");
-            }
-        })
-        .catch(function (err) {
-            console.log('Error occurred: ' + err);
-        }); 
+    fs.readFile("random.txt", "utf8", function (error, data) {
+
+        // If the code experiences any errors it will log the error to the console.
+        if (error) {
+            return console.log(error);
+        }
+
+        // We will then print the contents of data
+        console.log(data);
+
+        // Then split it by commas (to make it more readable)
+        var dataArr = data.split(",");
+
+        // We will then re-display the content as an array for later use.
+        console.log(dataArr);
+        console.log('allLines: ' + allLines);
+
+        var song = '';
+        if (process.argv[3] !== '') {
+            song = process.argv[3];
+        }
+        else if (dataArr.lenght > 0) {
+            song = dataArr[1].toString();
+        }
+        else {
+            song = 'The Sign';
+        }
+
+        spotify
+            .search({ type: 'track', query: song, limit: 1 })
+            .then(function (data, response) {
+                // console.log(JSON.stringify(data, null, 2));
+                console.log('length: ' + data.tracks.items.length);
+                for (let i = 0; i < data.tracks.items.length; i++) {
+                    const element = data.tracks.items[i];
+                    console.log('Artist(s): ' + element.album.artists[0].name);
+                    console.log("The song's name is: " + element.name);
+                    console.log('A preview link of the song from Spotify is: ' + element.preview_url);
+                    console.log('The album name is: ' + element.album.name);
+                    fs.appendFileSync("random.txt", 'spotify-this-song' + ', ' + element.name + "\n");
+                }
+            })
+            .catch(function (err) {
+                console.log('Error occurred: ' + err);
+            }); 
+    });
 }
 else if (process.argv[2] === 'movie-this') {
     var info = {};
@@ -97,14 +118,5 @@ else if (process.argv[2] === 'movie-this') {
         console.log(movie.Plot);
         console.log('actors: ', movie.Actors);
     });
-}
-else if (process.argv[2] === 'do-what-it-says') {
-    
-    if (process.argv[3] !== '') {
-        fs.readFile('random.txt');
-    }
-    else {
-        //search of Mr. Nobody movie
-    }
 }
 
