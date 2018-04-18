@@ -6,15 +6,19 @@ var Spotify = require("node-spotify-api");
 var spotify = new Spotify(keys.spotify);
 var Twitter = require("twitter");
 var client = new Twitter(keys.twitter);
+var fs = require('fs');
+var logger = fs.createWriteStream('log.txt', {
+    flags: 'a' // 'a' means appending (old data will be preserved)
+});
+// Include the request npm package (Don't forget to run "npm install request" in this folder first!)
+// Then run a request to the OMDB API with the movie specified
 // var Omdb = require('omdb');
 // var omdb = new Omdb(keys.omdb);
-
-var fs = require('fs');
-// Include the request npm package (Don't forget to run "npm install request" in this folder first!)
 var request = require("request");
-// Then run a request to the OMDB API with the movie specified
+
 
 if (process.argv[2] === 'my-tweets') {
+    logger.write('Appending ' + process.argv[2] +' command by node js console\n');
     //show you at leasr the last 20 tweets
     var params = {
         q: '#nodejs, #Nodejs', //search query
@@ -33,15 +37,18 @@ if (process.argv[2] === 'my-tweets') {
             }
         } else {
             console.log(error);
+            logger.write('Inside twitter-api debug log: ' + err + '\n');
         }
     });
 }
 else if (process.argv[2] === 'spotify-this-song' || process.argv[2] === 'do-what-it-says') {
+    logger.write('Appending ' + process.argv[2] + ' command by node js console\n');
     var allLines = fs.readFileSync('random.txt').toString().split('\n');
     fs.readFile("random.txt", "utf8", function (error, data) {
 
         // If the code experiences any errors it will log the error to the console.
         if (error) {
+            logger.write('Inside spotify-api debug log: ' + error + '\n');
             return console.log(error);
         }
 
@@ -52,20 +59,20 @@ else if (process.argv[2] === 'spotify-this-song' || process.argv[2] === 'do-what
         var dataArr = data.split(",");
 
         // We will then re-display the content as an array for later use.
-        console.log(dataArr);
+        console.log('Arrays of songs: ' + dataArr);
         console.log('allLines: ' + allLines);
 
         var song = '';
         if (process.argv[3] !== '') {
             song = process.argv[3];
         }
-        else if (dataArr.lenght > 0) {
-            song = dataArr[1].toString();
+        else if (dataArr.lenght > 0 && process.argv[2] === 'do-what-it-says') {
+            song = dataArr[1];
         }
         else {
             song = 'The Sign';
         }
-
+        console.log('Song >>>>>> ' + song);
         spotify
             .search({ type: 'track', query: song, limit: 1 })
             .then(function (data, response) {
@@ -82,10 +89,12 @@ else if (process.argv[2] === 'spotify-this-song' || process.argv[2] === 'do-what
             })
             .catch(function (err) {
                 console.log('Error occurred: ' + err);
+                logger.write('Error ocurred for spotify-api: ' + err + '\n');
             }); 
     });
 }
 else if (process.argv[2] === 'movie-this') {
+    logger.write('Appending ' + process.argv[2] + ' command by node js console\n');
     var info = {};
     // API URL: http://www.omdbapi.com/?i=tt3896198&apikey=omdb
 
@@ -108,6 +117,7 @@ else if (process.argv[2] === 'movie-this') {
         // if (response.statusCode === '200') {
         console.log('body:', JSON.parse(body)); // Print the HTML for the Google homepage.
         if (error) {
+            logger.write('Error ocurred for omdb-api: ' + err + '\n');
             return console.error(error);
         }
         var movie = JSON.parse(body);
@@ -119,4 +129,3 @@ else if (process.argv[2] === 'movie-this') {
         console.log('actors: ', movie.Actors);
     });
 }
-
