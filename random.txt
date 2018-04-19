@@ -1,2 +1,6 @@
-spotify-this-song,"I Want it That Way"spotify-this-song, All The Small Things
-spotify-this-song, All The Small Things
+spotify-this-song, "I Want it That Way"
+spotify-this-song, "Doo Wop (That Thing)"
+spotify-this-song, "River (feat. Ed Sheeran)"
+spotify-this-song, "Here"
+spotify-this-song, "Or Nah (feat. The Weeknd, Wiz Khalifa and DJ Mustard) - Remix"
+
