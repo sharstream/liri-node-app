@@ -132,21 +132,23 @@ switch (command){
             var chunk = item.substring(18);
             song = chunk;
             console.log('song: ' + song);
-            spotify
-                .search({ type: 'track', query: song, limit: 1 })
-                .then(function (data, response) {
-                    const element = data.tracks.items[0];
-                    console.log('--------------------EACH TRACK--------------------');
-                    console.log('Artist(s): ' + element.album.artists[0].name);
-                    console.log("The song's name is: " + element.name);
-                    console.log('A preview link of the song from Spotify is: ' + element.preview_url);
-                    console.log('The album name is: ' + element.album.name);
-                    console.log('--------------------END OF EACH TRACK--------------------');
-                })
-                .catch(function (err) {
-                    console.log('Error occurred: ' + err);
-                    logger.write('Error ocurred for do-what-it-says command: ' + err + '\n');
-                });
+            if (song !== '') {
+                spotify
+                    .search({ type: 'track', query: song, limit: 1 })
+                    .then(function (data, response) {
+                        const element = data.tracks.items[0];
+                        console.log('--------------------EACH TRACK--------------------');
+                        console.log('Artist(s): ' + element.album.artists[0].name);
+                        console.log("The song's name is: " + element.name);
+                        console.log('A preview link of the song from Spotify is: ' + element.preview_url);
+                        console.log('The album name is: ' + element.album.name);
+                        console.log('--------------------END OF EACH TRACK--------------------');
+                    })
+                    .catch(function (err) {
+                        console.log('Error occurred: ' + err);
+                        logger.write('Error ocurred for do-what-it-says command: ' + err + '\n');
+                    });
+            }
         });
         break;
 
