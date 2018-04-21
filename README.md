@@ -27,16 +27,16 @@ LIRI is like iPhone's SIRI. However, while SIRI is a Speech Interpretation and R
     "twitter": "^1.7.1"
   }`
   
-  Type node liri.js my-tweets
+  Type `node liri.js my-tweets`
   
   ![image alternative text](https://i.imgur.com/sbQLrfX.png)
   
- Type node liri.js spotify-this-song
+ Type `node liri.js spotify-this-song`
  
  ![image alternative text](https://i.imgur.com/Hvncx0n.png)
  
- Type node liri.js do-what-it-says
+ Type `node liri.js do-what-it-says`
  ![image alternative text](https://i.imgur.com/URvlnjY.png)
  
- Type node liri.js movie-this Avatar
+ Type `node liri.js movie-this Avatar`
  ![image alternative text](https://i.imgur.com/fHDObT7.png)
