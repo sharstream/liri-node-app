@@ -1,27 +1,28 @@
 //Basic Node js application
 
-var config = require("dotenv").config();
-var keys = require('./keys.js');
-var Spotify = require("node-spotify-api");
-var spotify = new Spotify(keys.spotify);
-var Twitter = require("twitter");
-var client = new Twitter(keys.twitter);
-var fs = require('fs');
-var logger = fs.createWriteStream('log.txt', {
+let config = require("dotenv").config();
+let keys = require('./keys.js');
+let Spotify = require("node-spotify-api");
+let spotify = new Spotify(keys.spotify);
+let Twitter = require("twitter");
+let client = new Twitter(keys.twitter);
+let fs = require('fs');
+let logger = fs.createWriteStream('log.txt', {
     flags: 'a' // 'a' means appending (old data will be preserved)
 });
 
-var request = require("request");
+let request = require("request");
 
-var command = process.argv[2];
-
+let command = process.argv[2];
+'use strict';
+let inquirer = require("inquirer");
 switch (command){
 
     case 'my-tweets' :
 
         logger.write('Appending ' + command + ' command by node js console\n');
         //show you at leasr the last 20 tweets
-        var params = {
+        let params = {
             q: '#nodejs, #Nodejs', //search query
             count: 20, //number of tweets to return
             screen_name: 'nodejs',
@@ -32,9 +33,9 @@ switch (command){
         client.get('search/tweets', params, function (error, tweets, response) {
             if (!error) {
                 console.log('--------------------TWITTER REPORT--------------------');
-                for (var i = 0; i < tweets.statuses.length; i++) {
-                    var id = { id: tweets.statuses[i].id_str };
-                    var text = { text: tweets.statuses[i].text };
+                for (let i = 0; i < tweets.statuses.length; i++) {
+                    let id = { id: tweets.statuses[i].id_str };
+                    let text = { text: tweets.statuses[i].text };
                     console.log('recent tweets: ' + id['id'] + 'tweet: ' + text['text']);
                 }
                 console.log('--------------------END TWITTER REPORT--------------------');
@@ -57,9 +58,9 @@ switch (command){
                 return console.log(error);
             }
 
-            var dataArr = data.split("\n");
-            var song = '';
-            var myArgs = process.argv.slice(2);
+            let dataArr = data.split("\n");
+            let song = '';
+            let myArgs = process.argv.slice(2);
             if (myArgs.length === 1) {
                 song = 'The Sign';
             }
@@ -87,49 +88,70 @@ switch (command){
         break;
 
     case 'movie-this' :
-
         logger.write('Appending ' + command + ' command by node js console\n');
-        var info = {};
 
-        if (process.argv[3] !== '') {
-            info = {
-                title: process.argv[3]
-            };
-        }
-        else {
-            info = {
-                title: 'Mr. Nobody.',
-                year: 2009
-            };
-        }
+        let info = {};
+        let movies = [];
 
-        var queryURL = "https://www.omdbapi.com/?t=" + info.title + "&y=&plot=short&apikey=" + keys.omdb.apikey;
-
-        request(queryURL, function (error, response, body) {
-            console.log('statusCode:', response.statusCode); // Print the response status code if a response was received  
-            if (error) {
-                logger.write('Error ocurred for movie-this command: ' + error + '\n');
-                return console.error(error);
+        inquirer.prompt([
+            {
+                name: "name",
+                type: "list",
+                message: "Enter the movie you want to watch?",
+                choices: movies,
+                filter: function(val) {
+                    return val.test(/^[a-zA-Z_\s]+$/);
+                }
             }
-            var movie = JSON.parse(body);
-            console.log('--------------------IMDB REPORT--------------------');
-            console.log('%s (%d) %d/10', movie.Title, movie.Year, movie.imdbRating);
-            console.log('Rooten Tomatoes %s', movie.Ratings[1]['Value']);
-            console.log('Country(%s) and language(%s)', movie.Country, movie.Language[0]);
-            console.log('Synopsis: ' + movie.Plot);
-            console.log('actors: ', movie.Actors);
-            console.log('--------------------END IMDB REPORT--------------------');
+        ]).then(answers => {
+            console.log(JSON.stringify(answers, null, '  '));
+            movies.forEach(function(track){
+                if (answer.name !== '') {
+                    info = {
+                        titles: movies
+                    };
+                }
+                else {
+                    info = {
+                        title: 'Mr. Nobody.',
+                        year: 2009
+                    };
+                }
+            });
+            console.log('list of songs: ' + tracks)
+
+        }).catch(function(err){
+            console.log(err);
         });
+
+        let queryURL = "https://www.omdbapi.com/?t=" + '"' + info.movies[0] + '"' + "&y=&plot=short&apikey=" + keys.omdb.apikey;
+        if (queryURL !== '') {
+            request(queryURL, function (error, response, body) {
+                console.log('statusCode:', response.statusCode); // Print the response status code if a response was received  
+                if (error) {
+                    logger.write('Error ocurred for movie-this command: ' + error + '\n');
+                    return console.error(error);
+                }
+                let movie = JSON.parse(body);
+                console.log('--------------------IMDB REPORT--------------------');
+                console.log('%s (%d) %d/10', movie.Title, movie.Year, movie.imdbRating);
+                console.log('Rooten Tomatoes %s', movie.Ratings[1]['Value']);
+                console.log('Country(%s) and language(%s)', movie.Country, movie.Language[0]);
+                console.log('Synopsis: ' + movie.Plot);
+                console.log('actors: ', movie.Actors);
+                console.log('--------------------END IMDB REPORT--------------------');
+            });
+        }
         break;
     
     case 'do-what-it-says':
 
         logger.write('Appending ' + command + ' command by node js console\n');
 
-        var allLines = fs.readFileSync('random.txt').toString().split('\n');
+        let allLines = fs.readFileSync('random.txt').toString().split('\n');
         console.log('songs: ' + allLines);
         allLines.forEach(function (item) {
-            var chunk = item.substring(18);
+            let chunk = item.substring(18);
             song = chunk;
             console.log('song: ' + song);
             if (song !== '') {
