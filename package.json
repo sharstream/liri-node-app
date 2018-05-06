@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/sharstream/liri-node-app#readme",
   "dependencies": {
+    "dot-env": "0.0.1",
     "dotenv": "^5.0.1",
     "inquirer": "^5.2.0",
     "node-spotify-api": "^1.0.7",

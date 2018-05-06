@@ -113,7 +113,7 @@ switch (command){
                 }
                 else {
                     info = {
-                        title: 'Mr. Nobody.',
+                        titles: 'Mr. Nobody.',
                         year: 2009
                     };
                 }
@@ -124,7 +124,7 @@ switch (command){
             console.log(err);
         });
 
-        let queryURL = "https://www.omdbapi.com/?t=" + '"' + info.movies[0] + '"' + "&y=&plot=short&apikey=" + keys.omdb.apikey;
+        let queryURL = "https://www.omdbapi.com/?t=" + '"' + info.titles + '"' + "&y=&plot=short&apikey=" + keys.omdb.apikey;
         if (queryURL !== '') {
             request(queryURL, function (error, response, body) {
                 console.log('statusCode:', response.statusCode); // Print the response status code if a response was received  
@@ -133,9 +133,13 @@ switch (command){
                     return console.error(error);
                 }
                 let movie = JSON.parse(body);
+                
                 console.log('--------------------IMDB REPORT--------------------');
-                console.log('%s (%d) %d/10', movie.Title, movie.Year, movie.imdbRating);
-                console.log('Rooten Tomatoes %s', movie.Ratings[1]['Value']);
+                // console.log(body);
+                console.log('Title: ' + movie.Title);
+                console.log('Year: ' + movie.Year);
+                console.log('Ranking: ' + movie.imdbRating);
+                console.log('Rooten Tomatoes: ' +  movie.Ratings);
                 console.log('Country(%s) and language(%s)', movie.Country, movie.Language[0]);
                 console.log('Synopsis: ' + movie.Plot);
                 console.log('actors: ', movie.Actors);
